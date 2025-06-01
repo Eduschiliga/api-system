@@ -28,13 +28,14 @@ public class AuthService implements UserDetailsService {
     private final ApplicationContext applicationContext;
 
     @Override
-    public UserDetails loadUserByUsername(String login) {
-        try {
-            return usuarioRepository.findByLogin(login);
-        } catch (UsernameNotFoundException e) {
-            throw new UsernameNotFoundException(e.getMessage());
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        UserDetails user = usuarioRepository.findByLogin(login);
+        if (user == null) {
+            throw new UsernameNotFoundException("Usuário não encontrado com login: " + login);
         }
+        return user;
     }
+
 
     public Usuario findUsuarioEntityByToken(String token) {
         token = token.replace("Bearer ", "");
