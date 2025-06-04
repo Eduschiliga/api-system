@@ -36,18 +36,6 @@ public class Usuario implements UserDetails {
     @Column(name = "nome_completo")
     private String nomeCompleto;
 
-    @Column(name = "login", nullable = false, unique = true)
-    private String login;
-
-    @Column(name = "email_verificado")
-    private Boolean emailVerificado;
-
-    @Column(name = "email_token")
-    private String emailToken;
-
-    @Column(name = "email_expiracao_token")
-    private LocalDateTime emailExpiracaoToken;
-
     @Column(name = "ativo")
     private Boolean ativo;
 
@@ -61,9 +49,6 @@ public class Usuario implements UserDetails {
 
     @PrePersist
     public void prePersist() {
-        this.emailVerificado = false;
-        this.emailToken = UUID.randomUUID().toString();
-        this.emailExpiracaoToken = LocalDateTime.now().plusMinutes(30);
         this.ativo = true;
     }
 
@@ -79,7 +64,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override

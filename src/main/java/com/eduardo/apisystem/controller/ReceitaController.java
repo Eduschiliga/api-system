@@ -1,6 +1,8 @@
 package com.eduardo.apisystem.controller;
 
 import com.eduardo.apisystem.model.dto.receita.ReceitaDTO;
+import com.eduardo.apisystem.model.enums.receita.TipoCategoria;
+import com.eduardo.apisystem.model.enums.receita.TipoCusto;
 import com.eduardo.apisystem.service.receita.ReceitaService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotNull;
@@ -61,5 +63,14 @@ public class ReceitaController {
     @Operation(summary = "Deleta uma receita pelo id")
     public void deletarReceita(@PathVariable @NotNull Long receitaId, @RequestHeader("Authorization") String token) {
         receitaService.deletar(receitaId, token);
+    }
+
+    @GetMapping("filtro")
+    public ResponseEntity<List<ReceitaDTO>> buscarComFiltro(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) TipoCategoria tipoCategoria,
+            @RequestParam(required = false) TipoCusto tipoCusto
+    ) {
+        return ResponseEntity.ok().body(receitaService.buscarComFiltro(nome, tipoCategoria, tipoCusto));
     }
 }

@@ -28,10 +28,10 @@ public class AuthService implements UserDetailsService {
     private final ApplicationContext applicationContext;
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        UserDetails user = usuarioRepository.findByLogin(login);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserDetails user = usuarioRepository.findByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException("Usuário não encontrado com login: " + login);
+            throw new UsernameNotFoundException("Usuário não encontrado com email: " + email);
         }
         return user;
     }
@@ -41,13 +41,13 @@ public class AuthService implements UserDetailsService {
         token = token.replace("Bearer ", "");
         String subject = tokenService.getSubject(token);
 
-        return usuarioRepository.findByLogin(subject);
+        return usuarioRepository.findByEmail(subject);
     }
 
-    public UsuarioResponseDTO findUsuarioByToken(String token) {
+    public UsuarioResponseDTO findUsuarioResponseByToken(String token) {
         token = token.replace("Bearer ", "");
         String subject = tokenService.getSubject(token);
-        Usuario usuario = usuarioRepository.findByLogin(subject);
+        Usuario usuario = usuarioRepository.findByEmail(subject);
 
         return usuarioMapper.usuarioToUsuarioResponseDTO(usuario);
     }
@@ -73,7 +73,7 @@ public class AuthService implements UserDetailsService {
 
     public TokenDTO authLogin(LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken usernamePassAuthToken = new UsernamePasswordAuthenticationToken(
-                loginRequest.getLogin(),
+                loginRequest.getEmail(),
                 loginRequest.getSenha()
         );
 

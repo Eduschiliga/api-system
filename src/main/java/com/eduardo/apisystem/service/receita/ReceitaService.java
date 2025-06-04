@@ -6,6 +6,7 @@ import com.eduardo.apisystem.entity.usuario.Usuario;
 import com.eduardo.apisystem.exception.customizadas.receita.ReceitaException;
 import com.eduardo.apisystem.mapper.receita.ReceitaMapper;
 import com.eduardo.apisystem.model.dto.receita.ReceitaDTO;
+import com.eduardo.apisystem.model.enums.receita.TipoCategoria;
 import com.eduardo.apisystem.model.enums.receita.TipoCusto;
 import com.eduardo.apisystem.repository.receita.ReceitaRepository;
 import com.eduardo.apisystem.service.auth.AuthService;
@@ -118,5 +119,16 @@ public class ReceitaService {
         Usuario usuario = authService.findUsuarioEntityByToken(token);
 
         return receitaMapper.toListDto(receitaRepository.buscarReceitaPorUsuario(usuario.getEmail()));
+    }
+
+    public List<ReceitaDTO> buscarComFiltro(String nome, TipoCategoria tipoCategoria, TipoCusto tipoCusto) {
+        String nomePatternParaBusca = null;
+        if (nome != null && !nome.trim().isEmpty()) {
+            nomePatternParaBusca = "%" + nome.trim() + "%";
+        }
+
+        return receitaMapper.toListDto(
+                receitaRepository.buscarComFiltroNomeCategoriaCusto(nomePatternParaBusca, tipoCategoria, tipoCusto)
+        );
     }
 }
