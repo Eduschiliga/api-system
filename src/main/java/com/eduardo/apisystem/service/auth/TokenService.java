@@ -49,7 +49,7 @@ public class TokenService {
 
       return JWT.create()
           .withIssuer("Api System")
-          .withSubject(usuario.getLogin())
+          .withSubject(usuario.getEmail())
           .withExpiresAt(dataExpiracao(expiration))
           .sign(algorithm);
 

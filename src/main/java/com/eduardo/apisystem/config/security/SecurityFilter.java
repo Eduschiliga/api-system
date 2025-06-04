@@ -36,7 +36,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 String subject = tokenService.getSubject(tokenJWT);
 
-                Usuario usuario = usuarioRepository.findByLogin(subject);
+                Usuario usuario = usuarioRepository.findByEmail(subject);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
 

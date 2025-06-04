@@ -1,5 +1,6 @@
 package com.eduardo.apisystem.controller;
 
+import com.eduardo.apisystem.entity.usuario.Usuario;
 import com.eduardo.apisystem.model.dto.perfil.PerfilDTO;
 import com.eduardo.apisystem.model.dto.usuario.SenhaDTO;
 import com.eduardo.apisystem.model.dto.usuario.UsuarioDTO;
@@ -30,9 +31,9 @@ public class UsuarioController {
     @ResponseStatus(code = HttpStatus.CREATED)
     @Operation(summary = "Cria um usuário")
     public ResponseEntity<Void> criarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO, UriComponentsBuilder uriBuilder) {
-        UsuarioDTO usuario = usuarioService.salvar(usuarioDTO);
+        Usuario usuario = usuarioService.salvar(usuarioDTO);
 
-        URI uri = uriBuilder.path("/api/system/usuario/{id}").buildAndExpand(usuario.getUsuarioId()).toUri();
+        URI uri = uriBuilder.path("/api/system/usuarios/{id}").buildAndExpand(usuario.getUsuarioId()).toUri();
 
         return ResponseEntity.created(uri).build();
     }
@@ -58,8 +59,8 @@ public class UsuarioController {
 
     @PutMapping
     @Operation(summary = "Atualiza um usuário")
-    public ResponseEntity<UsuarioResponseDTO> atualizar(@RequestBody @Valid UsuarioDTO usuarioDTO) {
-        return ResponseEntity.ok().body(usuarioService.atualizar(usuarioDTO));
+    public ResponseEntity<UsuarioResponseDTO> atualizar(@RequestBody @Valid UsuarioDTO usuarioDTO, @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok().body(usuarioService.atualizar(usuarioDTO, token));
     }
 
     @PutMapping("senha")
@@ -75,13 +76,7 @@ public class UsuarioController {
     @GetMapping("token")
     @Operation(summary = "Busca um usuário pelo token")
     public ResponseEntity<UsuarioResponseDTO> loadUserByToken(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(authService.findUsuarioByToken(token));
-    }
-
-    @GetMapping("verificar-conta")
-    @Operation(summary = "Verifica o email")
-    public ResponseEntity<String> handleVerificarEmail(@RequestParam String codigo) {
-        return ResponseEntity.ok(usuarioService.verificarEmail(codigo));
+        return ResponseEntity.ok(authService.findUsuarioResponseByToken(token));
     }
 
     @PatchMapping("{usuarioId}/perfil")

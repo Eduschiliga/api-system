@@ -10,9 +10,4 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
   Usuario findByEmail(String email);
-
-  @Query("FROM Usuario WHERE login = ?1")
-  Usuario findByLogin(String login);
-
-  Optional<Usuario> findByEmailToken(String emailToken);
 }
